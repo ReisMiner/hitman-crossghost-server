@@ -118,7 +118,8 @@ test('Creator maps: one invite preset each, contracts match the game location da
         assert.deepEqual(contract.Data.Objectives[0].Definition, hawkes.Data.Objectives[0].Definition, `${key} objective`);
         assert.equal(contract.Metadata.IsVersus, true);
         assert.equal(preset.Data.Properties.mode, 'invite');
-        assert.equal(preset.Metadata.Image, `images/locations/${contract.Metadata.Location}/tile.jpg`);
+        // The game names some tiles differently (LOCATION_EDGY/edgy_tile.jpg, LOCATION_siberia_graduation/...): use the location icon.
+        assert.equal(preset.Metadata.Image, sublocation.Properties.Icon, `${key} tile image`);
         assert.match(preset.Metadata.Title, /^UI_LOCATION_[A-Z_]+_CITY$/);
         // Pools stay playable: a map joins Random/Quick Match only after its bricks ship.
         for (const pool of presets.filter(p => p.Metadata.IsDefault))
