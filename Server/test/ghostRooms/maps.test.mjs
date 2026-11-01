@@ -23,6 +23,19 @@ const addedMaps = [
 ];
 const presetPath = 'menudata/h3/menudata/multiplayerpresets.json';
 const json = async relative => JSON.parse(await readFile(path.join(root, relative), 'utf8'));
+// Maps whose Ghost bricks the GhostModeCreator plugin creates in the merged mod.
+const creatorHint = /^Ghost Mode Creator map (\S+) - /;
+const creatorMaps = async () => {
+    const maps = [];
+    for (const preset of await json(presetPath)) {
+        if (preset.Metadata.IsDefault || preset.Data.Contracts.length !== 1) continue;
+        const contract = await json(`contractdata/${preset.Data.Contracts[0]}.json`);
+        const key = contract.Metadata.CodeName_Hint.match(creatorHint)?.[1];
+        if (key) maps.push({ key, id: contract.Metadata.Id, preset, contract, location: contract.Metadata.Location, resources: 6,
+            targetBrick: contract.Data.Bricks[0] });
+    }
+    return maps;
+};
 
 test('H3 presets reference complete Ghost Mode contracts, including Hawke\'s Bay, Haven and Paris', async () => {
     const presets = await json(presetPath);
@@ -65,6 +78,74 @@ test('H3 presets reference complete Ghost Mode contracts, including Hawke\'s Bay
             assert.ok(rules.split(/\r?\n/).includes(`!Server/contractdata/${map.id}.json`),
                 `${ignoreFile} must include the shipped ${map.title} contract`);
         }
+    }
+});
+
+test('Creator maps: one invite preset each, contracts match the game location data', async () => {
+    const maps = await creatorMaps();
+    assert.deepEqual(maps.map(m => m.key), ['ica-facility', 'sapienza', 'marrakesh', 'bangkok', 'colorado', 'hokkaido', 'mumbai',
+        'whittleton-creek', 'ambrose-island', 'isle-of-sgail', 'new-york', 'dubai', 'dartmoor', 'berlin', 'chongqing', 'mendoza']);
+    const locations = new Map((await json('userdata/h3/allunlockables.json')).filter(u => u.Type === 'location').map(u => [u.Id, u]));
+    const hawkes = await json(`contractdata/${hawkesBay}.json`);
+    const presets = await json(presetPath);
+    const ignores = {};
+    for (const ignoreFile of ['.gitignore', '.dockerignore'])
+        ignores[ignoreFile] = (await readFile(path.join(root, '..', ignoreFile), 'utf8')).split(/\r?\n/);
+    const publicIds = new Set(), objectiveIds = new Set();
+    for (const id of new Set(presets.flatMap(p => p.Data.Contracts))) {
+        const contract = await json(`contractdata/${id}.json`);
+        assert.ok(!publicIds.has(contract.Metadata.PublicId), 'unique PublicId');
+        publicIds.add(contract.Metadata.PublicId);
+        for (const objective of contract.Data.Objectives) {
+            assert.ok(!objectiveIds.has(objective.Id), 'unique objective id');
+            objectiveIds.add(objective.Id);
+        }
+    }
+    for (const { key, id, preset, contract } of maps) {
+        const sublocation = locations.get(contract.Metadata.Location);
+        assert.equal(sublocation?.Subtype, 'sublocation', `${key} location`);
+        assert.deepEqual(contract.Metadata.Entitlements, sublocation.Properties.Entitlements ?? [], `${key} entitlements`);
+        assert.match(contract.Metadata.ScenePath, /^assembly:\/_pro\/scenes\/missions\/[a-z0-9_/]+\.entity$/);
+        const folder = contract.Data.Bricks[0].match(/^(assembly:\/_pro\/scenes\/missions\/.+)\/versus_targets_([a-z]+)\.brick$/);
+        assert.ok(folder, `${key} target brick`);
+        assert.deepEqual(contract.Data.Bricks, [
+            `${folder[1]}/versus_targets_${folder[2]}.brick`,
+            `${folder[1]}/versus_items_${folder[2]}.brick`,
+            `${folder[1]}/versus_entrance_${folder[2]}.brick`,
+            'assembly:/_PRO/Scenes/bricks/ui_versus.brick',
+            'assembly:/_pro/scenes/bricks/vs_race_multiplayer.brick',
+        ]);
+        assert.deepEqual(contract.Data.Objectives[0].Definition, hawkes.Data.Objectives[0].Definition, `${key} objective`);
+        assert.equal(contract.Metadata.IsVersus, true);
+        assert.equal(preset.Data.Properties.mode, 'invite');
+        assert.equal(preset.Metadata.Image, `images/locations/${contract.Metadata.Location}/tile.jpg`);
+        assert.match(preset.Metadata.Title, /^UI_LOCATION_[A-Z_]+_CITY$/);
+        // Pools stay playable: a map joins Random/Quick Match only after its bricks ship.
+        for (const pool of presets.filter(p => p.Metadata.IsDefault))
+            assert.ok(!pool.Data.Contracts.includes(id), `${key} must not be in ${pool.Metadata.Title} yet`);
+        for (const [ignoreFile, rules] of Object.entries(ignores))
+            assert.ok(rules.includes(`!Server/contractdata/${id}.json`), `${ignoreFile} must ship ${key}`);
+    }
+});
+
+test('map presets are listed in the game\'s destination order', async () => {
+    const presets = await json(presetPath);
+    const locations = new Map((await json('userdata/h3/allunlockables.json')).filter(u => u.Type === 'location').map(u => [u.Id, u]));
+    const order = async id => {
+        const contract = await json(`contractdata/${id}.json`);
+        return locations.get(locations.get(contract.Metadata.Location).Properties.ParentLocation).Properties.Order;
+    };
+    const maps = presets.filter(p => !p.Metadata.IsDefault && p.Data.Properties.mode === 'invite');
+    assert.equal(maps.length, 21, 'every Ghost map has an invite preset');
+    const orders = [];
+    for (const preset of maps) orders.push(await order(preset.Data.Contracts[0]));
+    assert.deepEqual(orders, [...orders].sort((a, b) => a - b));
+    assert.deepEqual(presets.slice(0, 2).map(p => p.Metadata.Title), ['UI_MENU_LOBBY_MAP_RANDOM', 'UI_MENU_LOBBY_QUICKMATCH']);
+    assert.deepEqual(presets.slice(2, 2 + maps.length), maps, 'maps follow the pools as one block');
+    for (const pool of presets.filter(p => p.Metadata.IsDefault)) {
+        const poolOrders = [];
+        for (const id of pool.Data.Contracts) poolOrders.push(await order(id));
+        assert.deepEqual(poolOrders, [...poolOrders].sort((a, b) => a - b), `${pool.Metadata.Title} contracts in game order`);
     }
 });
 
@@ -150,13 +231,15 @@ test('both storefronts receive the added maps in menu/resources and join the sam
         body: JSON.stringify(body), signal: AbortSignal.timeout(3000),
     });
 
+    const servedMaps = [...addedMaps, ...await creatorMaps()];
     for (const store of ['epic', 'steam']) {
         const menu = await fetch(origin + '/multiplayerpresets?gamemode=versus', {
             headers: { 'X-Test-Store': store }, signal: AbortSignal.timeout(3000),
         });
         assert.equal(menu.status, 200);
         const { data } = await menu.json();
-        for (const map of addedMaps) {
+        assert.deepEqual(data.Presets.map(p => p.Id), (await json(presetPath)).map(p => p.Id), 'presets served in file order');
+        for (const map of servedMaps) {
             assert.ok(data.Presets.some(p => p.Id === map.id));
             const userCentric = data.UserCentricContracts.find(c => c.Contract.Metadata.Id === map.id);
             assert.ok(userCentric, 'contract survives user-centric generation');
@@ -173,7 +256,7 @@ test('both storefronts receive the added maps in menu/resources and join the sam
     }
 
     // No changes to transport or match registration are needed for the new map.
-    for (const map of addedMaps) {
+    for (const map of servedMaps) {
         for (const [hostStore, guestStore] of [['epic', 'steam'], ['steam', 'epic']]) {
             const host = await post('/RegisterToMatch', {
                 presetId: map.id, matchId: '00000000-0000-0000-0000-000000000000',
