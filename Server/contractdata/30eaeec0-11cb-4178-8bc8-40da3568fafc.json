@@ -1,0 +1,145 @@
+{
+  "Data": {
+    "Objectives": [
+      {
+        "Id": "3bcd74c4-3535-4417-bb7c-1a01f9899048",
+        "ObjectiveType": "custom",
+        "OnActive": { "IfCompleted": { "Visible": false } },
+        "Image": "images/contracts/AssRace/AssRaceTarget.jpg",
+        "BriefingName": "$loc UI_CONTRACT_VS_RACE_TARGETS_OBJ_NAME",
+        "BriefingText": "$loc UI_CONTRACT_VS_RACE_TARGETS_OBJ_DESC",
+        "Category": "primary",
+        "HUDTemplate": { "display": "$loc UI_CONTRACT_VS_RACE_TARGETS_OBJ" },
+        "Type": "statemachine",
+        "Definition": {
+          "ContextListeners": {
+            "CooldownActive": {
+              "type": "custom",
+              "HUDTemplate": {
+                "display": {
+                  "$loc": { "key": "UI_CONTRACT_VS_RACE_TARGET_INCOMING_OBJ", "data": [] }
+                }
+              }
+            }
+          },
+          "Context": {
+            "KilledActors": [],
+            "Targets": [],
+            "CooldownActive": 1,
+            "CooldownInActive": 1
+          },
+          "States": {
+            "Start": {
+              "TargetPickedConfirm": [
+                {
+                  "Actions": [
+                    { "$reset": "Targets" },
+                    { "$pushunique": ["Targets", "$Value.RepositoryId"] }
+                  ],
+                  "Transition": "TargetPicked"
+                }
+              ]
+            },
+            "TargetPicked": {
+              "TimerExpirationStart": [
+                { "Actions": { "$dec": "CooldownActive" }, "Transition": "CooldownRunning" }
+              ],
+              "TimerExpirationEnd": [
+                { "Actions": { "$dec": "CooldownActive" } }
+              ],
+              "TargetPickedConfirm": [
+                {
+                  "Actions": [
+                    { "$reset": "Targets" },
+                    { "$pushunique": ["Targets", "$Value.RepositoryId"] }
+                  ]
+                }
+              ]
+            },
+            "CooldownRunning": {
+              "$timer": [
+                {
+                  "Condition": { "$after": 20 },
+                  "Actions": { "$dec": "CooldownInActive" },
+                  "Transition": "TargetPicked"
+                }
+              ],
+              "TimerExpirationEnd": [
+                { "Actions": { "$dec": "CooldownInActive" } }
+              ],
+              "TargetPickedConfirm": [
+                {
+                  "Actions": [
+                    { "$reset": "Targets" },
+                    { "$pushunique": ["Targets", "$Value.RepositoryId"] }
+                  ]
+                }
+              ]
+            }
+          }
+        }
+      }
+    ],
+    "Bricks": [
+      "assembly:/_pro/scenes/missions/golden/mission_gecko/versus_targets_dubai.brick",
+      "assembly:/_pro/scenes/missions/golden/mission_gecko/versus_items_dubai.brick",
+      "assembly:/_pro/scenes/missions/golden/mission_gecko/versus_entrance_dubai.brick",
+      "assembly:/_PRO/Scenes/bricks/ui_versus.brick",
+      "assembly:/_pro/scenes/bricks/vs_race_multiplayer.brick"
+    ],
+    "Entrances": [],
+    "GameChangers": [],
+    "EngineModesBricks": [],
+    "EnableSaving": false
+  },
+  "Metadata": {
+    "CodeName_Hint": "Ghost Mode Creator map dubai - Dubai, On Top of the World",
+    "CreationTimestamp": "2026-11-01T00:00:00Z",
+    "CreatorUserId": "fadb923c-e6bb-4283-a537-eb4d1150262e",
+    "TileImage": "images/contracts/assrace/tile.jpg",
+    "Title": "UI_CONTRACT_VS_RACE_NAME",
+    "Description": "UI_CONTRACT_VS_RACE_DESC",
+    "Id": "30eaeec0-11cb-4178-8bc8-40da3568fafc",
+    "IsPublished": true,
+    "IsVersus": true,
+    "LastUpdate": "2026-11-01T00:00:00Z",
+    "Location": "LOCATION_GOLDEN_GECKO",
+    "Release": "1.0.x",
+    "SpawnSelectionType": "random",
+    "Gamemodes": ["versus"],
+    "Enginemodes": ["singleplayer", "multiplayer"],
+    "CharacterSetup": [
+      {
+        "Mode": "multiplayer",
+        "Characters": [
+          { "Name": "47", "Id": "44eba719-4d3a-4f27-9437-3f29821934b3" },
+          { "Name": "47", "Id": "44eba719-4d3a-4f27-9437-3f29821934b3" }
+        ]
+      }
+    ],
+    "Entitlements": ["LOCATION_GOLDEN"],
+    "ScenePath": "assembly:/_pro/scenes/missions/golden/mission_gecko/scene_gecko_basic.entity",
+    "Type": "vsrace",
+    "UserData": null,
+    "Scoring": {
+      "Kill": {
+        "UnnoticedTarget": 1,
+        "NoticedTarget": 0,
+        "NoticedNonTarget": -1,
+        "UnnoticedNonTarget": -1
+      },
+      "AccidentKill": 1,
+      "AsyncKill": {}
+    },
+    "EndConditions": { "PointLimit": 5 },
+    "TargetExpiration": 20,
+    "TargetExpirationReduced": 10,
+    "TargetLifeTime": 0,
+    "NonTargetKillPenaltyEnabled": false,
+    "NoticedTargetStreakPenaltyMax": 60,
+    "PublicId": "014576620908",
+    "IsFeatured": false,
+    "OpportunityData": []
+  },
+  "UserData": {}
+}

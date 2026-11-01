@@ -10,11 +10,11 @@
     },
     "Data": {
       "Contracts": [
+        "59d1caab-2056-4f4b-a921-9958ef0a88eb",
+        "8fcf8f5d-0fe9-47d7-bff3-d747d0cd1e89",
         "c854d9c7-8991-42db-a2e4-3cf93e645e81",
         "d5ad70f4-7dbb-4b2b-b183-061778a51468",
-        "8fcf8f5d-0fe9-47d7-bff3-d747d0cd1e89",
-        "5e895adf-9879-44d9-b43f-13bb24e897bc",
-        "59d1caab-2056-4f4b-a921-9958ef0a88eb"
+        "5e895adf-9879-44d9-b43f-13bb24e897bc"
       ],
       "Properties": {
         "mode": "invite",
@@ -34,14 +34,166 @@
     },
     "Data": {
       "Contracts": [
+        "59d1caab-2056-4f4b-a921-9958ef0a88eb",
+        "8fcf8f5d-0fe9-47d7-bff3-d747d0cd1e89",
         "c854d9c7-8991-42db-a2e4-3cf93e645e81",
         "d5ad70f4-7dbb-4b2b-b183-061778a51468",
-        "8fcf8f5d-0fe9-47d7-bff3-d747d0cd1e89",
-        "5e895adf-9879-44d9-b43f-13bb24e897bc",
-        "59d1caab-2056-4f4b-a921-9958ef0a88eb"
+        "5e895adf-9879-44d9-b43f-13bb24e897bc"
       ],
       "Properties": {
         "mode": "matchmaking",
+        "active": true,
+        "__comment": "mode can be: matchmaking/invite/all"
+      }
+    }
+  },
+  {
+    "Id": "566ec2b6-27d4-4ade-b38e-7a63877724aa",
+    "GameMode": "versus",
+    "Metadata": {
+      "Title": "UI_LOCATION_ICA_FACILITY_CITY",
+      "Header": "UI_MENU_LOBBY_INVITEPLAYER",
+      "Image": "images/locations/LOCATION_ICA_FACILITY/tile.jpg"
+    },
+    "Data": {
+      "Contracts": [
+        "566ec2b6-27d4-4ade-b38e-7a63877724aa"
+      ],
+      "Properties": {
+        "mode": "invite",
+        "active": true,
+        "__comment": "mode can be: matchmaking/invite/all"
+      }
+    }
+  },
+  {
+    "Id": "59d1caab-2056-4f4b-a921-9958ef0a88eb",
+    "GameMode": "versus",
+    "Metadata": {
+      "Title": "UI_LOCATION_PARIS_CITY",
+      "Header": "UI_MENU_LOBBY_INVITEPLAYER",
+      "Image": "images/locations/LOCATION_PARIS/tile.jpg"
+    },
+    "Data": {
+      "Contracts": [
+        "59d1caab-2056-4f4b-a921-9958ef0a88eb"
+      ],
+      "Properties": {
+        "mode": "invite",
+        "active": true,
+        "__comment": "mode can be: matchmaking/invite/all"
+      }
+    }
+  },
+  {
+    "Id": "457f18d3-0075-4a3c-aab0-bded15748138",
+    "GameMode": "versus",
+    "Metadata": {
+      "Title": "UI_LOCATION_COASTALTOWN_CITY",
+      "Header": "UI_MENU_LOBBY_INVITEPLAYER",
+      "Image": "images/locations/LOCATION_COASTALTOWN/tile.jpg"
+    },
+    "Data": {
+      "Contracts": [
+        "457f18d3-0075-4a3c-aab0-bded15748138"
+      ],
+      "Properties": {
+        "mode": "invite",
+        "active": true,
+        "__comment": "mode can be: matchmaking/invite/all"
+      }
+    }
+  },
+  {
+    "Id": "bc3b7358-7226-4061-860f-5896e4b2906c",
+    "GameMode": "versus",
+    "Metadata": {
+      "Title": "UI_LOCATION_MARRAKECH_CITY",
+      "Header": "UI_MENU_LOBBY_INVITEPLAYER",
+      "Image": "images/locations/LOCATION_MARRAKECH/tile.jpg"
+    },
+    "Data": {
+      "Contracts": [
+        "bc3b7358-7226-4061-860f-5896e4b2906c"
+      ],
+      "Properties": {
+        "mode": "invite",
+        "active": true,
+        "__comment": "mode can be: matchmaking/invite/all"
+      }
+    }
+  },
+  {
+    "Id": "a13c32cc-d337-4b1e-a996-412469c01695",
+    "GameMode": "versus",
+    "Metadata": {
+      "Title": "UI_LOCATION_BANGKOK_CITY",
+      "Header": "UI_MENU_LOBBY_INVITEPLAYER",
+      "Image": "images/locations/LOCATION_BANGKOK/tile.jpg"
+    },
+    "Data": {
+      "Contracts": [
+        "a13c32cc-d337-4b1e-a996-412469c01695"
+      ],
+      "Properties": {
+        "mode": "invite",
+        "active": true,
+        "__comment": "mode can be: matchmaking/invite/all"
+      }
+    }
+  },
+  {
+    "Id": "581504c1-6336-4f9c-b53f-16a6436e199a",
+    "GameMode": "versus",
+    "Metadata": {
+      "Title": "UI_LOCATION_COLORADO_CITY",
+      "Header": "UI_MENU_LOBBY_INVITEPLAYER",
+      "Image": "images/locations/LOCATION_COLORADO/tile.jpg"
+    },
+    "Data": {
+      "Contracts": [
+        "581504c1-6336-4f9c-b53f-16a6436e199a"
+      ],
+      "Properties": {
+        "mode": "invite",
+        "active": true,
+        "__comment": "mode can be: matchmaking/invite/all"
+      }
+    }
+  },
+  {
+    "Id": "006117fc-4c7b-4053-9a43-410a9fa7f7f1",
+    "GameMode": "versus",
+    "Metadata": {
+      "Title": "UI_LOCATION_HOKKAIDO_CITY",
+      "Header": "UI_MENU_LOBBY_INVITEPLAYER",
+      "Image": "images/locations/LOCATION_HOKKAIDO/tile.jpg"
+    },
+    "Data": {
+      "Contracts": [
+        "006117fc-4c7b-4053-9a43-410a9fa7f7f1"
+      ],
+      "Properties": {
+        "mode": "invite",
+        "active": true,
+        "__comment": "mode can be: matchmaking/invite/all"
+      }
+    }
+  },
+  {
+    "Id": "8fcf8f5d-0fe9-47d7-bff3-d747d0cd1e89",
+    "GameMode": "versus",
+    "Metadata": {
+      "Title": "UI_LOCATION_NEWZEALAND_CITY",
+      "Header": "UI_MENU_LOBBY_INVITEPLAYER",
+      "Image": "images/locations/LOCATION_NEWZEALAND/tile.jpg"
+    },
+    "Data": {
+      "Contracts": [
+        "8fcf8f5d-0fe9-47d7-bff3-d747d0cd1e89"
+      ],
+      "Properties": {
+        "mode": "invite",
         "active": true,
         "__comment": "mode can be: matchmaking/invite/all"
       }
@@ -86,16 +238,92 @@
     }
   },
   {
-    "Id": "8fcf8f5d-0fe9-47d7-bff3-d747d0cd1e89",
+    "Id": "611afe7f-e150-4098-9858-db16ec2a125f",
     "GameMode": "versus",
     "Metadata": {
-      "Title": "UI_LOCATION_NEWZEALAND_CITY",
+      "Title": "UI_LOCATION_MUMBAI_CITY",
       "Header": "UI_MENU_LOBBY_INVITEPLAYER",
-      "Image": "images/locations/LOCATION_NEWZEALAND/tile.jpg"
+      "Image": "images/locations/LOCATION_MUMBAI/tile.jpg"
     },
     "Data": {
       "Contracts": [
-        "8fcf8f5d-0fe9-47d7-bff3-d747d0cd1e89"
+        "611afe7f-e150-4098-9858-db16ec2a125f"
+      ],
+      "Properties": {
+        "mode": "invite",
+        "active": true,
+        "__comment": "mode can be: matchmaking/invite/all"
+      }
+    }
+  },
+  {
+    "Id": "38d4803c-2622-47ba-8e57-a3d3fb10e025",
+    "GameMode": "versus",
+    "Metadata": {
+      "Title": "UI_LOCATION_NORTHAMERICA_CITY",
+      "Header": "UI_MENU_LOBBY_INVITEPLAYER",
+      "Image": "images/locations/LOCATION_NORTHAMERICA/tile.jpg"
+    },
+    "Data": {
+      "Contracts": [
+        "38d4803c-2622-47ba-8e57-a3d3fb10e025"
+      ],
+      "Properties": {
+        "mode": "invite",
+        "active": true,
+        "__comment": "mode can be: matchmaking/invite/all"
+      }
+    }
+  },
+  {
+    "Id": "a608f1e4-4e4e-4ac0-a57d-b14b4bf69e7f",
+    "GameMode": "versus",
+    "Metadata": {
+      "Title": "UI_LOCATION_ROCKY_CITY",
+      "Header": "UI_MENU_LOBBY_INVITEPLAYER",
+      "Image": "images/locations/LOCATION_ROCKY_DUGONG/tile.jpg"
+    },
+    "Data": {
+      "Contracts": [
+        "a608f1e4-4e4e-4ac0-a57d-b14b4bf69e7f"
+      ],
+      "Properties": {
+        "mode": "invite",
+        "active": true,
+        "__comment": "mode can be: matchmaking/invite/all"
+      }
+    }
+  },
+  {
+    "Id": "c4a70bbe-7f67-43ea-9e9d-b3184a61b8a5",
+    "GameMode": "versus",
+    "Metadata": {
+      "Title": "UI_LOCATION_NORTHSEA_CITY",
+      "Header": "UI_MENU_LOBBY_INVITEPLAYER",
+      "Image": "images/locations/LOCATION_NORTHSEA/tile.jpg"
+    },
+    "Data": {
+      "Contracts": [
+        "c4a70bbe-7f67-43ea-9e9d-b3184a61b8a5"
+      ],
+      "Properties": {
+        "mode": "invite",
+        "active": true,
+        "__comment": "mode can be: matchmaking/invite/all"
+      }
+    }
+  },
+  {
+    "Id": "5352638d-41e4-4761-845b-5a963c172af2",
+    "GameMode": "versus",
+    "Metadata": {
+      "Title": "UI_LOCATION_GREEDY_CITY",
+      "Header": "UI_MENU_LOBBY_INVITEPLAYER",
+      "Image": "images/locations/LOCATION_GREEDY_RACCOON/tile.jpg"
+    },
+    "Data": {
+      "Contracts": [
+        "5352638d-41e4-4761-845b-5a963c172af2"
       ],
       "Properties": {
         "mode": "invite",
@@ -124,16 +352,92 @@
     }
   },
   {
-    "Id": "59d1caab-2056-4f4b-a921-9958ef0a88eb",
+    "Id": "30eaeec0-11cb-4178-8bc8-40da3568fafc",
     "GameMode": "versus",
     "Metadata": {
-      "Title": "UI_LOCATION_PARIS_CITY",
+      "Title": "UI_LOCATION_GOLDEN_CITY",
       "Header": "UI_MENU_LOBBY_INVITEPLAYER",
-      "Image": "images/locations/LOCATION_PARIS/tile.jpg"
+      "Image": "images/locations/LOCATION_GOLDEN_GECKO/tile.jpg"
     },
     "Data": {
       "Contracts": [
-        "59d1caab-2056-4f4b-a921-9958ef0a88eb"
+        "30eaeec0-11cb-4178-8bc8-40da3568fafc"
+      ],
+      "Properties": {
+        "mode": "invite",
+        "active": true,
+        "__comment": "mode can be: matchmaking/invite/all"
+      }
+    }
+  },
+  {
+    "Id": "9b7d0445-4e4a-4534-b788-8365ac616976",
+    "GameMode": "versus",
+    "Metadata": {
+      "Title": "UI_LOCATION_ANCESTRAL_CITY",
+      "Header": "UI_MENU_LOBBY_INVITEPLAYER",
+      "Image": "images/locations/LOCATION_ANCESTRAL_BULLDOG/tile.jpg"
+    },
+    "Data": {
+      "Contracts": [
+        "9b7d0445-4e4a-4534-b788-8365ac616976"
+      ],
+      "Properties": {
+        "mode": "invite",
+        "active": true,
+        "__comment": "mode can be: matchmaking/invite/all"
+      }
+    }
+  },
+  {
+    "Id": "5f0cc0b6-9dfa-4ad9-9f27-01d68e083516",
+    "GameMode": "versus",
+    "Metadata": {
+      "Title": "UI_LOCATION_EDGY_CITY",
+      "Header": "UI_MENU_LOBBY_INVITEPLAYER",
+      "Image": "images/locations/LOCATION_EDGY_FOX/tile.jpg"
+    },
+    "Data": {
+      "Contracts": [
+        "5f0cc0b6-9dfa-4ad9-9f27-01d68e083516"
+      ],
+      "Properties": {
+        "mode": "invite",
+        "active": true,
+        "__comment": "mode can be: matchmaking/invite/all"
+      }
+    }
+  },
+  {
+    "Id": "cddcc656-3a85-4d60-b8b5-1e0dd55fcfb2",
+    "GameMode": "versus",
+    "Metadata": {
+      "Title": "UI_LOCATION_WET_CITY",
+      "Header": "UI_MENU_LOBBY_INVITEPLAYER",
+      "Image": "images/locations/LOCATION_WET_RAT/tile.jpg"
+    },
+    "Data": {
+      "Contracts": [
+        "cddcc656-3a85-4d60-b8b5-1e0dd55fcfb2"
+      ],
+      "Properties": {
+        "mode": "invite",
+        "active": true,
+        "__comment": "mode can be: matchmaking/invite/all"
+      }
+    }
+  },
+  {
+    "Id": "336c4701-f6c8-4161-aebb-3de84c6eb696",
+    "GameMode": "versus",
+    "Metadata": {
+      "Title": "UI_LOCATION_ELEGANT_CITY",
+      "Header": "UI_MENU_LOBBY_INVITEPLAYER",
+      "Image": "images/locations/LOCATION_ELEGANT_LLAMA/tile.jpg"
+    },
+    "Data": {
+      "Contracts": [
+        "336c4701-f6c8-4161-aebb-3de84c6eb696"
       ],
       "Properties": {
         "mode": "invite",

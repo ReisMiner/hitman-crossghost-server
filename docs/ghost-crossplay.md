@@ -74,8 +74,9 @@ are supported.
 
 ### Hawke's Bay
 
-The H3 menu includes Miami, Santa Fortuna, Hawke's Bay, Haven Island and Paris,
-including the Random Map pool. Hawke's Bay uses the Ghost Mode mod's daytime **Anubis** mission, not
+The H3 menu lists every Ghost map in the game's destination order (see
+"Creator maps" below); Miami, Santa Fortuna, Hawke's Bay, Haven Island and Paris
+are in the Random Map pool. Hawke's Bay uses the Ghost Mode mod's daytime **Anubis** mission, not
 the Nightcall story contract. Both PCs need Ghost Mode assets **2.1.0 or newer**
 (2.3.0 recommended), which include the Hawke's Bay entities.
 
@@ -153,6 +154,53 @@ Automated tests validate the three brick documents, every local entity
 reference, resource registrations, server menu/resource responses and both
 host directions. Actual SMF deployment, spawn points, target reachability and
 cross-store gameplay still need a manual two-PC test.
+
+### Creator maps (all other main destinations)
+
+Every main destination except Miami, Santa Fortuna and the Carpathian
+Mountains train has an **Invite Player** preset. Presets are listed in the
+game's destination order (`allunlockables.json` location `Order`): Random Map,
+Quick Match, ICA Facility, Paris, Sapienza, Marrakesh, Bangkok, Colorado,
+Hokkaido, Hawke's Bay, Miami, Santa Fortuna, Mumbai, Whittleton Creek, Ambrose
+Island, Isle of Sgàil, New York, Haven Island, Dubai, Dartmoor, Berlin,
+Chongqing, Mendoza, then the featured match.
+
+The 16 new maps have no Ghost content until the GhostModeCreator plugin creates
+it: in the Creator's project panel choose the merged mod folder, pick the map
+under **Ghost Mode maps** and press **Create missing Ghost files** (or open
+the map in game). That writes the map's empty `versus_{items,entrance,targets}`
+bricks (one start pair at the mission's default spawn, an empty target list),
+registers them in the mod and adds the lobby names. Deploy with SMF on both
+PCs, then load the map's preset and author it like Paris. **Do not load a new
+map's preset before its bricks are deployed**; the contract requires them.
+The new maps are not in Random Map / Quick Match yet; add a map's contract ID to
+those pools once it has targets and crates.
+
+| Map | Contract / preset ID | Scene (`assembly:/_pro/scenes/missions/…`) | Location | Entitlement |
+| --- | --- | --- | --- | --- |
+| ICA Facility | `566ec2b6-27d4-4ade-b38e-7a63877724aa` | `thefacility/_scene_mission_polarbear_module_005.entity` | `LOCATION_ICA_FACILITY` | none |
+| Sapienza | `457f18d3-0075-4a3c-aab0-bded15748138` | `coastaltown/_scene_octopus.entity` | `LOCATION_COASTALTOWN` | `LOCATION_COASTALTOWN` |
+| Marrakesh | `bc3b7358-7226-4061-860f-5896e4b2906c` | `marrakesh/_scene_mission_spider.entity` | `LOCATION_MARRAKECH` | `LOCATION_MARRAKECH` |
+| Bangkok | `a13c32cc-d337-4b1e-a996-412469c01695` | `bangkok/_scene_mission_tiger.entity` | `LOCATION_BANGKOK` | `LOCATION_BANGKOK` |
+| Colorado | `581504c1-6336-4f9c-b53f-16a6436e199a` | `colorado_2/_scene_mission_bull.entity` | `LOCATION_COLORADO` | `LOCATION_COLORADO` |
+| Hokkaido | `006117fc-4c7b-4053-9a43-410a9fa7f7f1` | `hokkaido/_scene_mission_snowcrane.entity` | `LOCATION_HOKKAIDO` | `LOCATION_HOKKAIDO` |
+| Mumbai | `611afe7f-e150-4098-9858-db16ec2a125f` | `mumbai/scene_mongoose.entity` | `LOCATION_MUMBAI` | `LOCATION_MUMBAI` |
+| Whittleton Creek | `38d4803c-2622-47ba-8e57-a3d3fb10e025` | `skunk/scene_skunk.entity` | `LOCATION_NORTHAMERICA` | `LOCATION_NORTHAMERICA` |
+| Ambrose Island | `a608f1e4-4e4e-4ac0-a57d-b14b4bf69e7f` | `rocky/scene_dugong.entity` | `LOCATION_ROCKY_DUGONG` | `LOCATION_ROCKY` |
+| Isle of Sgàil | `c4a70bbe-7f67-43ea-9e9d-b3184a61b8a5` | `theark/scene_magpie.entity` | `LOCATION_NORTHSEA` | `LOCATION_NORTHSEA` |
+| New York | `5352638d-41e4-4761-845b-5a963c172af2` | `greedy/mission_raccoon/scene_raccoon_basic.entity` | `LOCATION_GREEDY_RACCOON` | `LOCATION_GREEDY` |
+| Dubai | `30eaeec0-11cb-4178-8bc8-40da3568fafc` | `golden/mission_gecko/scene_gecko_basic.entity` | `LOCATION_GOLDEN_GECKO` | `LOCATION_GOLDEN` |
+| Dartmoor | `9b7d0445-4e4a-4534-b788-8365ac616976` | `ancestral/scene_bulldog.entity` | `LOCATION_ANCESTRAL_BULLDOG` | `LOCATION_ANCESTRAL` |
+| Berlin | `5f0cc0b6-9dfa-4ad9-9f27-01d68e083516` | `edgy/mission_fox/scene_fox_basic.entity` | `LOCATION_EDGY_FOX` | `LOCATION_EDGY` |
+| Chongqing | `cddcc656-3a85-4d60-b8b5-1e0dd55fcfb2` | `wet/scene_rat_basic.entity` | `LOCATION_WET_RAT` | `LOCATION_WET` |
+| Mendoza | `336c4701-f6c8-4161-aebb-3de84c6eb696` | `elegant/scene_llama.entity` | `LOCATION_ELEGANT_LLAMA` | `LOCATION_ELEGANT` |
+
+Each contract copies Paris's objective, scoring and shared bricks with its own
+objective ID and `PublicId`. Scenes are the main missions as registered in the
+game's package definition; locations and entitlements come from
+`allunlockables.json`. Lobby titles use `UI_LOCATION_<code>_CITY` keys whose
+English text the Creator writes into the mod manifest. None of the new maps has
+been loaded in a Ghost match yet.
 
 ## Implementation and tests
 
