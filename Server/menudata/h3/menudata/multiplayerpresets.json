@@ -53,7 +53,7 @@
     "Metadata": {
       "Title": "UI_LOCATION_ICA_FACILITY_CITY",
       "Header": "UI_MENU_LOBBY_INVITEPLAYER",
-      "Image": "images/locations/LOCATION_ICA_FACILITY/tile.jpg"
+      "Image": "images/locations/LOCATION_siberia_graduation/tile.jpg"
     },
     "Data": {
       "Contracts": [
@@ -91,7 +91,7 @@
     "Metadata": {
       "Title": "UI_LOCATION_COASTALTOWN_CITY",
       "Header": "UI_MENU_LOBBY_INVITEPLAYER",
-      "Image": "images/locations/LOCATION_COASTALTOWN/tile.jpg"
+      "Image": "images/locations/location_coastaltown/tile.jpg"
     },
     "Data": {
       "Contracts": [
@@ -110,7 +110,7 @@
     "Metadata": {
       "Title": "UI_LOCATION_MARRAKECH_CITY",
       "Header": "UI_MENU_LOBBY_INVITEPLAYER",
-      "Image": "images/locations/LOCATION_MARRAKECH/tile.jpg"
+      "Image": "images/locations/location_marrakech/tile.jpg"
     },
     "Data": {
       "Contracts": [
@@ -281,7 +281,7 @@
     "Metadata": {
       "Title": "UI_LOCATION_ROCKY_CITY",
       "Header": "UI_MENU_LOBBY_INVITEPLAYER",
-      "Image": "images/locations/LOCATION_ROCKY_DUGONG/tile.jpg"
+      "Image": "images/locations/LOCATION_ROCKY/rocky_tile.jpg"
     },
     "Data": {
       "Contracts": [
@@ -357,7 +357,7 @@
     "Metadata": {
       "Title": "UI_LOCATION_GOLDEN_CITY",
       "Header": "UI_MENU_LOBBY_INVITEPLAYER",
-      "Image": "images/locations/LOCATION_GOLDEN_GECKO/tile.jpg"
+      "Image": "images/locations/LOCATION_GOLDEN/golden_tile.jpg"
     },
     "Data": {
       "Contracts": [
@@ -376,7 +376,7 @@
     "Metadata": {
       "Title": "UI_LOCATION_ANCESTRAL_CITY",
       "Header": "UI_MENU_LOBBY_INVITEPLAYER",
-      "Image": "images/locations/LOCATION_ANCESTRAL_BULLDOG/tile.jpg"
+      "Image": "images/locations/LOCATION_ANCESTRAL/ancestral_tile.jpg"
     },
     "Data": {
       "Contracts": [
@@ -395,7 +395,7 @@
     "Metadata": {
       "Title": "UI_LOCATION_EDGY_CITY",
       "Header": "UI_MENU_LOBBY_INVITEPLAYER",
-      "Image": "images/locations/LOCATION_EDGY_FOX/tile.jpg"
+      "Image": "images/locations/LOCATION_EDGY/edgy_tile.jpg"
     },
     "Data": {
       "Contracts": [
@@ -414,7 +414,7 @@
     "Metadata": {
       "Title": "UI_LOCATION_WET_CITY",
       "Header": "UI_MENU_LOBBY_INVITEPLAYER",
-      "Image": "images/locations/LOCATION_WET_RAT/tile.jpg"
+      "Image": "images/locations/LOCATION_WET/wet_tile.jpg"
     },
     "Data": {
       "Contracts": [
@@ -433,7 +433,7 @@
     "Metadata": {
       "Title": "UI_LOCATION_ELEGANT_CITY",
       "Header": "UI_MENU_LOBBY_INVITEPLAYER",
-      "Image": "images/locations/LOCATION_ELEGANT_LLAMA/tile.jpg"
+      "Image": "images/locations/LOCATION_ELEGANT/elegant_tile.jpg"
     },
     "Data": {
       "Contracts": [
