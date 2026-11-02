@@ -14,6 +14,7 @@ const {
     UUIDRegex,
     getDefaultLoadout,
     unlockOrderComparer,
+    publicHost,
 } = require('../utils.js');
 const { resolveProfiles } = require('./profileHandler.js');
 const { contractSessions } = require('./eventHandler.js');
@@ -104,16 +105,24 @@ app.get('/dashboard/Dashboard_Category_:category/:subscriptionId/:type/:id/:mode
     });
 });
 
-app.get('/Hub', async (req, res) => {
-    const userdata = JSON.parse(await readFile(path.join('userdata', req.gameVersion, 'users', `${req.jwt.unique_name}.json`)));
-    const serverTile = await readFile(path.join('menudata', 'h3', 'serverTile.json')).then(file => {
+// The hub's "Current Server" tile: menudata/h3/serverTile.json if present,
+// otherwise the template showing this server's public host.
+async function loadServerTile() {
+    return readFile(path.join('menudata', 'h3', 'serverTile.json')).then(file => {
         return JSON.parse(file);
     }).catch(async err => {
         if (err.code !== 'ENOENT') {
             throw err;
         }
-        return JSON.parse(await readFile(path.join('menudata', 'h3', 'serverTile.template.json'))); // use template if no custom serverTile.json exists
+        const host = publicHost();
+        const tile = JSON.parse(await readFile(path.join('menudata', 'h3', 'serverTile.template.json')));
+        return { ...tile, title: host, select: { header: 'Current Server', title: host, icon: tile.icon } };
     });
+}
+
+app.get('/Hub', async (req, res) => {
+    const userdata = JSON.parse(await readFile(path.join('userdata', req.gameVersion, 'users', `${req.jwt.unique_name}.json`)));
+    const serverTile = await loadServerTile();
     res.json({
         template: await getTemplate('hub', req.gameVersion),
         data: {
@@ -899,4 +908,5 @@ module.exports = {
     router: app,
     generateUserCentric: generateUserCentric,
     generateUserCentricMultiple: generateUserCentricMultiple,
+    loadServerTile,
 };

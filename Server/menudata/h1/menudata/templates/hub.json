@@ -763,15 +763,15 @@
                     "nrows": 1.5,
                     "ncols": 2,
                     "data": {
-                      "header": "View GitLab repo",
-                      "title": "LocalGhost",
+                      "header": "View repository",
+                      "title": "CrossGhost",
                       "icon": "arrowright",
                       "image": "$res images/livetile/localghost_livetile.png"
                     },
                     "actions": {
                       "accept": {
                         "open-url": {
-                          "url": "https://gitlab.com/grappigegovert/localghost"
+                          "url": "https://git.ramon.cc/ramon/crossghost-server"
                         }
                       },
                       "select": {
@@ -783,8 +783,8 @@
                               "selectable": false,
                               "pressable": false,
                               "data": {
-                                "header": "https://gitlab.com/grappigegovert/localghost",
-                                "title": "View Localghost repo",
+                                "header": "https://git.ramon.cc/ramon/crossghost-server",
+                                "title": "View CrossGhost repo",
                                 "typeicon": "arrowright"
                               }
                             }

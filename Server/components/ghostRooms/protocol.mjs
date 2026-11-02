@@ -1,6 +1,6 @@
 import { createHmac, timingSafeEqual } from 'node:crypto';
 
-// GhostCrossplay's bounded lobby_metadata.h field encoding. HTTP envelopes
+// CrossGhost's bounded lobby_metadata.h field encoding. HTTP envelopes
 // use response=true (type 2), nonce=1, generation=1; no lobby metadata is stored here.
 const magic = Buffer.from([...'GHOST-LOBBY-'].map(c => c.charCodeAt(0)).concat([0x91, 0x27, 1, 0xd3]));
 export function fieldsEncode(fields) {

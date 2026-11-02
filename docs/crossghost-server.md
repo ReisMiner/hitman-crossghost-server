@@ -1,6 +1,6 @@
-# Ghost Crossplay: one LocalGhost container
+# CrossGhost server: one container
 
-This fork runs the game backend, room-code API and authenticated UDP relay in
+The [CrossGhost server](https://git.ramon.cc/ramon/crossghost-server) runs the game backend, room-code API and authenticated UDP relay in
 one Node process. Everything needed to deploy is inside this repository.
 
 ## Deploy
@@ -44,11 +44,12 @@ Defaults require no `.env` file. Compose accepts these overrides if needed:
 | `TRUST_PROXY` | `single` | One trusted proxy hop for per-client rate limits; `loopback` and `none` also work |
 
 Changing the public origin also requires rebuilding the player DLL with the same
-origin. Keep the container on Node 22 for the existing LocalGhost dependency set.
+origin. Keep the container on Node 22 for the dependency set inherited from LocalGhost.
 
 ### Profiles and updates
 
-Profiles persist in the named volume `localghost_userdata`. Fresh volumes start
+Profiles persist in the named volume `localghost_userdata` (its name is kept
+from before the CrossGhost rename, so existing profiles stay). Fresh volumes start
 with the reference templates. Local player profiles and identity bindings are
 excluded from the image; import existing userdata separately when migrating.
 
@@ -59,14 +60,25 @@ profiles; adding `-v` deletes the volume.
 For a consistent backup:
 
 ```sh
-docker compose stop localghost
-docker compose run --rm --no-deps -T localghost tar -C /app/userdata -czf - . > userdata-backup.tar.gz
-docker compose start localghost
+docker compose stop crossghost
+docker compose run --rm --no-deps -T crossghost tar -C /app/userdata -czf - . > userdata-backup.tar.gz
+docker compose start crossghost
+```
+
+### Upgrading a deployment from the `localghost` compose project
+
+The compose project and service are now called `crossghost`. Stop the old
+container once (it holds the ports), then start the new one; profiles carry
+over through the shared `localghost_userdata` volume:
+
+```sh
+docker compose -p localghost down
+docker compose up -d --build
 ```
 
 ## Player flow
 
-With the GhostCrossplay DLL and Ghost Mode assets installed, either storefront
+With `CrossGhost.dll` and the CrossGhost Assets mod (`ramoncc.CrossGhostAssets`) installed, either storefront
 selects a map/lobby and presses **Host**. They share the five-digit room code.
 The other player enters that code and presses **Join**. The DLL configures the
 game backend automatically. Both Epic-host/Steam-guest and Steam-host/Epic-guest
@@ -205,7 +217,7 @@ been loaded in a Ghost match yet.
 ## Implementation and tests
 
 - `Server/serb.js` mounts `/healthz`, `/v1/config` and `/v1/rooms/*` before the
-  game-token middleware, on the same HTTP listener as all LocalGhost endpoints.
+  game-token middleware, on the same HTTP listener as all game endpoints.
 - `Server/components/ghostRooms/` contains the binary room protocol and UDP relay.
   It preserves native RakNet/app payloads and uses per-member HMAC-SHA256 tokens,
   replay rejection, NAT rebinding, leases, two-player capacity and bounded traffic.

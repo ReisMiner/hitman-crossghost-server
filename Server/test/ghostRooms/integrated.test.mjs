@@ -25,11 +25,11 @@ async function launch(t, overrides = {}) {
     return new Promise((resolve, reject) => {
         let output = '', pending = '';
         const deadline = setTimeout(() => {
-            child.kill(); reject(new Error(`LocalGhost startup timed out: ${output}`));
+            child.kill(); reject(new Error(`CrossGhost server startup timed out: ${output}`));
         }, 8000);
         child.once('error', error => { clearTimeout(deadline); reject(error); });
         child.once('exit', code => {
-            clearTimeout(deadline); reject(new Error(`LocalGhost exited (${code}): ${output}`));
+            clearTimeout(deadline); reject(new Error(`CrossGhost server exited (${code}): ${output}`));
         });
         child.stderr.on('data', bytes => { output += bytes; });
         child.stdout.on('data', bytes => {
@@ -38,7 +38,7 @@ async function launch(t, overrides = {}) {
             for (const line of lines) {
                 if (!line.startsWith('{')) continue;
                 const value = JSON.parse(line);
-                if (value.event === 'localghost-ready') {
+                if (value.event === 'crossghost-ready') {
                     clearTimeout(deadline); resolve(value);
                 }
             }
@@ -58,7 +58,7 @@ const pack = (credentials, role, kind, sequence, payload) => packetEncode(creden
     Buffer.from(credentials.Token, 'hex'), role, kind, kind === Kind.up ? 3 : 0, sequence, payload);
 const unpack = (bytes, credentials) => packetDecode(bytes, Buffer.from(credentials.Token, 'hex'));
 
-test('one LocalGhost listener serves game config/auth and room-code UDP transport', { timeout: 15000 }, async t => {
+test('one CrossGhost server listener serves game config/auth and room-code UDP transport', { timeout: 15000 }, async t => {
     const address = await launch(t);
     assert.equal(address.publicOrigin, publicOrigin);
     const origin = `http://127.0.0.1:${address.httpPort}`;
@@ -92,6 +92,8 @@ test('one LocalGhost listener serves game config/auth and room-code UDP transpor
     });
     assert.equal(init.status, 200);
     assert.equal((await init.json()).blobconfig.bloburl, publicOrigin + '/resources-8-2/');
+
+    assert.equal((await request('/resources-8-2/images/livetile/crossghost_livetile.png', { headers: { Authorization: `Bearer ${token}` } })).status, 200, 'CrossGhost menu tile image');
 
     const roomConfig = fieldsDecode(Buffer.from(await (await request('/v1/config')).arrayBuffer()));
     assert.equal(roomConfig.BackendUrl, publicOrigin);
@@ -130,7 +132,7 @@ test('one LocalGhost listener serves game config/auth and room-code UDP transpor
     assert.equal((await request('/config/pc-prod/8_2_0')).status, 200, 'game API remains available after room teardown');
 });
 
-test('LocalGhost startup fails when its UDP relay cannot bind', { timeout: 15000 }, async t => {
+test('CrossGhost server startup fails when its UDP relay cannot bind', { timeout: 15000 }, async t => {
     const occupied = await peer(t);
     await assert.rejects(launch(t, { UDP_PORT: String(occupied.address().port) }), /EADDRINUSE/);
 });

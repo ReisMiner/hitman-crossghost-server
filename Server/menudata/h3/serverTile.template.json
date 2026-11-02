@@ -1,5 +1,5 @@
 {
-  "_comment": "Fill in your server's info and save as 'serverTile.json'",
+  "_comment": "Without a 'serverTile.json', this tile's title and highlight show the host of PUBLIC_ORIGIN (hitmanghost.ramon.cc by default). Copy to 'serverTile.json' to set your own text.",
   "title": "Self-hosted",
   "image": "images/livetile/tile_getopulent_small.jpg",
   "icon": "story",

@@ -232,7 +232,19 @@ function unlockOrderComparer(a, b) {
     return a.Properties.UnlockOrder - b.Properties.UnlockOrder;
 }
 
+// The official CrossGhost server; PUBLIC_ORIGIN overrides it for self-hosting.
+const DEFAULT_PUBLIC_ORIGIN = 'https://hitmanghost.ramon.cc';
+function publicHost() {
+    try {
+        return new URL(process.env.PUBLIC_ORIGIN || DEFAULT_PUBLIC_ORIGIN).host;
+    } catch {
+        return new URL(DEFAULT_PUBLIC_ORIGIN).host;
+    }
+}
+
 module.exports = {
+    DEFAULT_PUBLIC_ORIGIN,
+    publicHost,
     extractToken,
     getServerVerObj,
     MaxPlayerLevel,

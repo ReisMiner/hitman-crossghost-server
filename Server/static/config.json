@@ -6,23 +6,23 @@
       "GAME_VER": "7.3.0",
       "SERVER_VER": {
         "Metrics": {
-          "MetricsServerHost": "http://localhost",
+          "MetricsServerHost": "https://hitmanghost.ramon.cc",
           "MetricsServerServicePath": "api/metrics/add"
         },
         "Authentication": {
-          "AuthenticationHost": "http://localhost",
+          "AuthenticationHost": "https://hitmanghost.ramon.cc",
           "AuthenticationServicePathConfiguration": "authentication/api/configuration",
           "UserChannelServicePath": "authentication/api/userchannel"
         },
         "Configuration": {
-          "Url": "http://localhost/files/onlineconfig.json",
-          "AgreementUrl": "http://localhost/files/privacypolicy/hm2/privacypolicy.json"
+          "Url": "https://hitmanghost.ramon.cc/files/onlineconfig.json",
+          "AgreementUrl": "https://hitmanghost.ramon.cc/files/privacypolicy/hm2/privacypolicy.json"
         },
         "Resources": {
-          "ResourcesServicePath": "http://localhost/files"
+          "ResourcesServicePath": "https://hitmanghost.ramon.cc/files"
         },
         "GlobalAuthentication": {
-          "AuthenticationHost": "http://localhost",
+          "AuthenticationHost": "https://hitmanghost.ramon.cc",
           "OAuthPath": "oauth/token",
           "RequestedAudience": "pc-prod_7"
         }

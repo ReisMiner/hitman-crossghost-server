@@ -24,7 +24,7 @@
     "typeoverride": "online",
     "information": [
       {
-        "description": "Only connect to LocalGhost servers that you trust. A ton of game data is sent to it, and I have no control over how servers may use it."
+        "description": "Only connect to CrossGhost servers that you trust. A ton of game data is sent to it, and I have no control over how servers may use it."
       }
     ]
   }

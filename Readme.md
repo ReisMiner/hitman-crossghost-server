@@ -1,8 +1,11 @@
-# CrossGhost
+# CrossGhost server
 
-This fork is based on grappigegovert's previous work: [LocalGhost](https://gitlab.com/grappigegovert/localghost). 
+The server behind [CrossGhost](https://git.ramon.cc/ramon/crossghost): HITMAN 3
+Ghost Mode crossplay between Steam and Epic Games players, on every Ghost Mode
+map. The public instance runs at **hitmanghost.ramon.cc**.
 
-The aim is to bring Ghost Mode Crossplay to life between Steam and Epic Games players.
+Source: <https://git.ramon.cc/ramon/crossghost-server>. This fork is based on
+grappigegovert's previous work: [LocalGhost](https://gitlab.com/grappigegovert/localghost).
 
 ## Players
 
@@ -10,8 +13,15 @@ The setup process for players is super simple. You'll need the requirements down
 
 - [ZHMModSDK](https://github.com/OrfeasZ/ZHMModSDK) installed
 - [Simple Mod Framework (SMF)](https://github.com/atampy25/simple-mod-framework) installed
-- [CrossGhost](https://git.ramon.cc/ramon/crossghost) mod downloaded
-- [Ghost Mode Assets Mod](https://git.ramon.cc/ramon/crossghost-assets) installed (made by Me)
+- [CrossGhost](https://git.ramon.cc/ramon/crossghost/releases/latest) (`CrossGhost.dll`) downloaded
+- [CrossGhost Assets](https://git.ramon.cc/ramon/crossghost-assets/releases/latest) (`ramoncc.CrossGhostAssets`) deployed with SMF
+
+The DLL connects the game to hitmanghost.ramon.cc by itself; no patcher is needed.
+
+## Server hosters
+
+See [docs/crossghost-server.md](docs/crossghost-server.md) for the Docker
+deployment (`docker compose up -d --build`).
 
 The install instructions for each of those is best found on their respective GitHub/Nexus Mods pages.
 

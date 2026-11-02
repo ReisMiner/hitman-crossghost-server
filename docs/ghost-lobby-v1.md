@@ -13,7 +13,7 @@ token, and has no game integration, protected LAN deployment or new login proof.
 
 ## Identity and deployment
 
-- Use the UUID profile ID issued by LocalGhost's `/oauth/token`, not a Steam ID or
+- Use the UUID profile ID issued by the server's `/oauth/token`, not a Steam ID or
   Epic account ID. Platform is informational and is not used for room compatibility.
 - Existing profile-to-store bindings remain unchanged. This does not automatically
   merge one person's Steam and Epic profiles or add account linking.
@@ -26,7 +26,7 @@ token, and has no game integration, protected LAN deployment or new login proof.
   source change. Tests start separate servers on ephemeral loopback ports.
 
 **Keep this development server loopback-only.** The new API checks HS256 signature,
-issuer, audience and expiry of LocalGhost tokens, but LocalGhost still uses a known
+issuer, audience and expiry of server tokens, but the server still uses a known
 hard-coded key and does not validate genuine storefront login proofs. A forged
 profile can still be obtained through those legacy mechanisms. Legacy match APIs
 are unchanged and do not receive the new room authorization checks.
@@ -61,14 +61,14 @@ Epic experiment's renamed manifest. A real transport revision must replace the
 test-only `unimplemented-v1` tag before gameplay is attempted.
 
 Only Miami and Santa Fortuna are admitted. `GetCapabilities` returns their actual
-LocalGhost contract and preset IDs. This is not proof of native loading or ownership;
+CrossGhost server contract and preset IDs. This is not proof of native loading or ownership;
 each client must own and have installed the required licensed content.
 
 ## HTTP contract
 
 Base path: `/authentication/api/userchannel/GhostLobbyService/`
 
-Every operation is a JSON **POST** with `Authorization: Bearer <LocalGhost token>`
+Every operation is a JSON **POST** with `Authorization: Bearer <server token>`
 (the game's `X-GPS-Authorization` header is also supported). Player identity and
 storefront come exclusively from the verified token, never request JSON. Requests
 must contain exactly the fields below; unknown/missing fields are rejected.
@@ -160,7 +160,7 @@ Success status is 200. API-generated errors have shape:
 | 413 | `INVALID_JSON` (body exceeds 8 KiB) |
 | 503 | `LOBBY_LIMIT`, `CODE_UNAVAILABLE` |
 
-LocalGhost's outer legacy middleware may return an empty 401 body before this
+The server's outer legacy middleware may return an empty 401 body before this
 router runs. Clients must handle HTTP status even when no structured JSON exists.
 
 ## Native bridge interface: next checkpoint, not implemented

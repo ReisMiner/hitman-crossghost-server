@@ -8,13 +8,13 @@ const path = require('path');
 const uuid = require('uuid');
 const { writeFile, readFile } = require('atomically');
 
-const { extractToken, getServerVerObj, getGameVersionFromJWTPis, getGameVersionFromServerVersion, UUIDRegex } = require('./components/utils.js');
+const { extractToken, getServerVerObj, getGameVersionFromJWTPis, getGameVersionFromServerVersion, UUIDRegex, DEFAULT_PUBLIC_ORIGIN } = require('./components/utils.js');
 const h1router = require('./components/h1router.js');
 const h2router = require('./components/h2router.js');
 const h3router = require('./components/h3router.js');
 
 let app = express();
-const publicUrl = new URL(process.env.PUBLIC_ORIGIN || 'https://hitmanghost.ramon.cc');
+const publicUrl = new URL(process.env.PUBLIC_ORIGIN || DEFAULT_PUBLIC_ORIGIN);
 if (!['https:', 'http:'].includes(publicUrl.protocol) || publicUrl.username || publicUrl.password ||
     publicUrl.pathname !== '/' || publicUrl.search || publicUrl.hash) {
     throw new Error('PUBLIC_ORIGIN must be an HTTP(S) origin without a path');
@@ -384,7 +384,7 @@ async function start() {
             httpServer.once('error', reject);
             httpServer.listen(Number(process.env.PORT ?? 80), process.env.BIND_HOST || '0.0.0.0', resolve);
         });
-        console.log(JSON.stringify({ event: 'localghost-ready', httpPort: httpServer.address().port,
+        console.log(JSON.stringify({ event: 'crossghost-ready', httpPort: httpServer.address().port,
             udpPort: relay.udpPort, publicOrigin }));
     } catch (error) {
         await roomService.close();
@@ -400,4 +400,4 @@ for (const signal of ['SIGINT', 'SIGTERM']) process.on(signal, async () => {
     await Promise.all([new Promise(resolve => httpServer.close(resolve)), roomService?.close()]);
     clearTimeout(deadline);
 });
-start().catch(error => { console.error('LocalGhost startup failed:', error.message); process.exit(1); });
+start().catch(error => { console.error('CrossGhost server startup failed:', error.message); process.exit(1); });

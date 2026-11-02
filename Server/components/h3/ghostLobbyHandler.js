@@ -12,7 +12,7 @@ const woaAppIds = {
 
 router.use((req, res, next) => {
     res.set('Cache-Control', 'no-store');
-    // Resource URLs can bypass LocalGhost's outer authentication middleware.
+    // Resource URLs can bypass the server's outer authentication middleware.
     if (!req.jwt) return res.status(401).json({ error: { code: 'AUTH_REQUIRED', message: 'A bearer token is required.' } });
     // Legacy middleware only decodes JWTs. Verify server-issued tokens for this API,
     // without changing the stock game's legacy endpoints. The legacy secret and
@@ -24,7 +24,7 @@ router.use((req, res, next) => {
             algorithms: ['HS256'], issuer: 'auth.hitman.io', audience: 'pc_prod_7',
         });
     } catch (error) {
-        return res.status(401).json({ error: { code: 'INVALID_TOKEN', message: 'A valid LocalGhost bearer token is required.' } });
+        return res.status(401).json({ error: { code: 'INVALID_TOKEN', message: 'A valid CrossGhost bearer token is required.' } });
     }
     if (req.gameVersion !== 'h3' || !Object.hasOwn(woaAppIds, req.jwt.platform) || !woaAppIds[req.jwt.platform].includes(req.jwt.pis)) {
         return res.status(403).json({ error: { code: 'WOA_REQUIRED', message: 'This API requires a WOA Steam or Epic profile.' } });

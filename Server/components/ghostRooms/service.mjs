@@ -55,7 +55,7 @@ export function createRoomService({ backendUrl = '', host = '127.0.0.1', udpPort
         if (req.method !== 'POST' || !['/v1/rooms/create', '/v1/rooms/join', '/v1/rooms/leave'].includes(req.url)) {
             reply(res, 404, { Error: 'Unknown room operation' }); return;
         }
-        // Express supplies req.ip using LocalGhost's configured proxy policy.
+        // Express supplies req.ip using the server's configured proxy policy.
         // Standalone tests use the socket peer; never parse raw forwarded headers.
         const ip = req.ip ?? req.socket.remoteAddress;
         let rate = clients.get(ip);
@@ -160,7 +160,7 @@ export function createRoomService({ backendUrl = '', host = '127.0.0.1', udpPort
 }
 
 // Standalone HTTP adapter for protocol/native integration tests. Production
-// mounts handleRequest directly in LocalGhost's existing Express application.
+// mounts handleRequest directly in the CrossGhost server's Express application.
 export function createService({ host = '127.0.0.1', httpHost = host, httpPort = 8787, ...options } = {}) {
     const rooms = createRoomService({ host, ...options });
     const server = http.createServer((req, res) => {

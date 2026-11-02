@@ -1,5 +1,5 @@
 {
-  "name": "hitmanserb",
+  "name": "crossghost-server",
   "version": "",
   "scripts": {
     "start": "node serb.js",
