@@ -1,0 +1,518 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Google+Sans:ital,opsz,wght@0,17..18,400..700;1,17..18,400..700&display=swap" rel="stylesheet">
+    <title>CrossGhost HITMAN Mod</title>
+    <style>
+        :root {
+            --bg: #ffffff;
+            --surface: #f6f7f8;
+            --ink: #14161a;
+            --body-text: #2b3038;
+            --muted: #616a76;
+            --line: #e4e6e9;
+            --accent: #c8202c;
+            --dark: #0e0f12;
+            --dark-line: rgba(255, 255, 255, 0.1);
+            --nav-height: 64px;
+            --measure: 880px;
+            --gutter: clamp(1.25rem, 5vw, 2.5rem);
+            --radius: 14px;
+        }
+
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: inherit;
+        }
+
+        html {
+            scroll-behavior: smooth;
+            scroll-padding-top: calc(var(--nav-height) + 1.5rem);
+            -webkit-text-size-adjust: 100%;
+        }
+
+        body {
+            padding-top: var(--nav-height);
+            background: var(--bg);
+            color: var(--body-text);
+            font-family: 'Google Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+            font-size: 1rem;
+            line-height: 1.65;
+            text-rendering: optimizeLegibility;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        ::selection {
+            background: var(--accent);
+            color: #ffffff;
+        }
+
+        :focus-visible {
+            outline: 2px solid var(--accent);
+            outline-offset: 3px;
+            border-radius: 3px;
+        }
+
+        h1,
+        h2,
+        h3,
+        h4,
+        h5,
+        h6 {
+            color: var(--ink);
+            font-weight: 700;
+            line-height: 1.2;
+            letter-spacing: -0.015em;
+            text-wrap: balance;
+        }
+
+        h1 {
+            font-size: clamp(2.5rem, 8vw, 3.75rem);
+            letter-spacing: -0.03em;
+        }
+
+        h2 {
+            font-size: clamp(1.6rem, 4vw, 2.05rem);
+            letter-spacing: -0.02em;
+        }
+
+        h3 {
+            margin-top: 2.25rem;
+            margin-bottom: 0.35rem;
+            font-size: clamp(1.15rem, 2.4vw, 1.3rem);
+            font-weight: 600;
+            letter-spacing: -0.01em;
+        }
+
+        h4 {
+            margin-top: 1.75rem;
+            margin-bottom: 0.3rem;
+            font-size: 1.05rem;
+            font-weight: 600;
+            letter-spacing: 0;
+        }
+
+        p {
+            max-width: 68ch;
+            margin-bottom: 1rem;
+            overflow-wrap: break-word;
+        }
+
+        p:last-child {
+            margin-bottom: 0;
+        }
+
+        a {
+            color: var(--accent);
+            text-decoration: none;
+            text-underline-offset: 0.18em;
+            transition: color 0.15s ease;
+        }
+
+        a:hover {
+            color: #a5121c;
+            text-decoration: underline;
+        }
+
+        ul,
+        ol {
+            margin: 0.25rem 0 1.25rem;
+            padding-left: 1.5rem;
+        }
+
+        li {
+            margin-bottom: 0.45rem;
+            padding-left: 0.15rem;
+            overflow-wrap: break-word;
+        }
+
+        li:last-child {
+            margin-bottom: 0;
+        }
+
+        li > ul,
+        li > ol {
+            margin-top: 0.45rem;
+            margin-bottom: 0.35rem;
+        }
+
+        ul > li::marker {
+            color: var(--accent);
+        }
+
+        ol > li::marker {
+            color: var(--accent);
+            font-weight: 600;
+        }
+
+        b,
+        strong {
+            color: var(--ink);
+            font-weight: 600;
+        }
+
+        code {
+            padding: 0.12em 0.38em;
+            background: var(--surface);
+            border: 1px solid var(--line);
+            border-radius: 6px;
+            color: var(--ink);
+            font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace;
+            font-size: 0.86em;
+            overflow-wrap: anywhere;
+        }
+
+        kbd {
+            display: inline-block;
+            padding: 0.3em 0.55em 0.35em;
+            background: #ffffff;
+            border: 1px solid #cfd4da;
+            border-bottom-width: 2px;
+            border-radius: 6px;
+            box-shadow: 0 1px 0 rgba(20, 22, 26, 0.05);
+            color: var(--ink);
+            font-family: inherit;
+            font-size: 0.8em;
+            font-weight: 600;
+            line-height: 1;
+            white-space: nowrap;
+        }
+
+        nav {
+            position: fixed;
+            inset: 0 0 auto 0;
+            z-index: 50;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: clamp(1rem, 5vw, 2.75rem);
+            height: var(--nav-height);
+            padding-inline: var(--gutter);
+            background: rgba(14, 15, 18, 0.85);
+            border-bottom: 1px solid var(--dark-line);
+            -webkit-backdrop-filter: blur(14px);
+            backdrop-filter: blur(14px);
+        }
+
+        nav a {
+            padding: 0.35rem 0;
+            border-bottom: 2px solid transparent;
+            color: #b9c0ca;
+            font-size: 0.95rem;
+            font-weight: 500;
+            letter-spacing: 0.01em;
+            transition: color 0.18s ease, border-color 0.18s ease;
+        }
+
+        nav a:hover,
+        nav a:focus-visible {
+            border-bottom-color: var(--accent);
+            color: #ffffff;
+            text-decoration: none;
+        }
+
+        header {
+            background-color: var(--dark);
+            border-bottom: 1px solid var(--dark-line);
+            color: #ffffff;
+        }
+
+        header > div {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 0.85rem;
+            width: min(var(--measure), calc(100% - (var(--gutter) * 2)));
+            min-height: clamp(320px, 48vh, 440px);
+            margin-inline: auto;
+            padding-block: clamp(3rem, 8vw, 4.5rem);
+            text-align: center;
+        }
+
+        header h1 {
+            color: #ffffff;
+        }
+
+        header h6 {
+            max-width: 46ch;
+            color: #aeb5c0;
+            font-size: clamp(1rem, 2.4vw, 1.18rem);
+            font-weight: 400;
+            letter-spacing: 0;
+            line-height: 1.5;
+        }
+
+        section {
+            width: min(var(--measure), calc(100% - (var(--gutter) * 2)));
+            margin-inline: auto;
+            padding-block: clamp(2.75rem, 7vw, 4.25rem);
+        }
+
+        section + section {
+            border-top: 1px solid var(--line);
+        }
+
+        section > h2 {
+            position: relative;
+            margin-bottom: 1.25rem;
+            padding-bottom: 0.7rem;
+        }
+
+        section > h2::after {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 40px;
+            height: 3px;
+            border-radius: 3px;
+            background: var(--accent);
+            content: "";
+        }
+
+        section > h6 {
+            max-width: 62ch;
+            margin-bottom: 1.75rem;
+            color: var(--muted);
+            font-size: 1.05rem;
+            font-weight: 400;
+            letter-spacing: 0;
+            line-height: 1.55;
+        }
+
+        #features-section {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+            gap: 1rem;
+            align-items: stretch;
+        }
+
+        #features-section > h2 {
+            grid-column: 1 / -1;
+            margin-bottom: 0.5rem;
+        }
+
+        #features-section > div {
+            padding: 1.3rem 1.35rem;
+            background: var(--surface);
+            border: 1px solid var(--line);
+            border-radius: var(--radius);
+            transition: border-color 0.18s ease, box-shadow 0.18s ease, transform 0.18s ease;
+        }
+
+        #features-section > div:hover {
+            border-color: #d2d6db;
+            box-shadow: 0 8px 24px rgba(20, 22, 26, 0.07);
+            transform: translateY(-2px);
+        }
+
+        #features-section > div p {
+            max-width: none;
+        }
+
+        #features-section > div p:first-child {
+            margin-bottom: 0.2rem;
+            color: var(--ink);
+            font-size: 1.05rem;
+            font-weight: 600;
+        }
+
+        #features-section > div p:last-child {
+            color: var(--muted);
+            font-size: 0.95rem;
+            line-height: 1.55;
+        }
+
+        footer {
+            padding: clamp(2.25rem, 6vw, 3rem) var(--gutter);
+            background: var(--dark);
+            border-top: 1px solid var(--dark-line);
+            color: #8f97a3;
+            font-size: 0.875rem;
+            line-height: 1.7;
+        }
+
+        footer p {
+            max-width: 64ch;
+            margin: 0 auto 0.5rem;
+            overflow-wrap: anywhere;
+            text-align: center;
+        }
+
+        footer p:last-child {
+            margin-bottom: 0;
+        }
+
+        footer a {
+            color: #e6e8eb;
+            text-decoration: underline;
+            text-decoration-color: rgba(255, 255, 255, 0.3);
+        }
+
+        footer a:hover {
+            color: #ffffff;
+            text-decoration-color: var(--accent);
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            html {
+                scroll-behavior: auto;
+            }
+
+            *,
+            *::before,
+            *::after {
+                transition: none !important;
+            }
+        }
+
+        @media (max-width: 520px) {
+            :root {
+                --nav-height: 56px;
+            }
+
+            nav a {
+                font-size: 0.875rem;
+            }
+
+            header > div {
+                min-height: 280px;
+            }
+
+            section {
+                padding-block: 2.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+<header>
+    <nav>
+        <a href="#installation">Installation</a>
+        <a href="#features">Features</a>
+        <a href="#about">About</a>
+    </nav>
+    <div>
+        <h1>CrossGhost</h1>
+        <h6>The All-in-One Versus Multiplayer mode for HITMAN World Of Assassination</h6>
+    </div>
+</header>
+<main>
+    <section>
+        <h2 id="installation">Installation</h2>
+        <h6>Below are the complete steps you need to follow to install the CrossGhost multiplayer mod to enable GhostMode. Follow them carefully!</h6>
+        <h3>Downloads</h3>
+        <p>Download everything listed here in the latest version:</p>
+        <ul>
+            <li><a href="https://github.com/OrfeasZ/ZHMModSDK/releases/latest">ZHMModSDK</a></li>
+            <li><a href="https://github.com/atampy25/simple-mod-framework/releases/latest">Simple Mod Framework</a></li>
+            <li><a href="https://git.ramon.cc/ramon/crossghost/releases/latest">CrossGhost Client DLL</a></li>
+            <li><a href="https://git.ramon.cc/ramon/crossghost-assets/releases/latest">CrossGhost Assets</a></li>
+        </ul>
+        <h3>Setup</h3>
+        <ol>
+            <li>
+                Install the ZHMModSDK by copying the contents of the zip inside the <code>Retail</code> folder in the Hitman Installation directory
+                <ul>
+                    <li><b>Epic Games</b> default location: <code>C:\Program Files\Epic Games\HITMAN3\</code></li>
+                    <li><b>Steam</b> default location: <code>C:\Program Files (x86)\Steam\steamapps\common\HITMAN 3</code></li>
+                </ul>
+            </li>
+            <li>Copy the <code>CrossGhost.dll</code> file inside the <code>mods</code> folder in the <code>Retail</code> directory</li>
+            <li>Install Simple Mod Framework by creating a folder in the Hitman installation folder called <code>Simple Mod Framework</code> and extracting the zip contents from the SMF download inside this folder.</li>
+            <li>Run the <code>Mod manager.bat</code> file, go to the enable/disable mods tab, select the GhostMode Assets zip you downloaded and enable and deploy it. Deployment of the mod might take a few minutes.</li>
+            <li>Run Hitman and open the ZHMModSDK interface with <kbd>Insert</kbd> and toggle the <code>CrossGhost</code> Mod on.</li>
+            <li>Restart the game afterward.</li>
+        </ol>
+        <h3>Usage</h3>
+        <p>Right at the start, whenever you enable or disable the mod, you will need to restart the game for the changes to take effect. The mod overwrites the server Hitman is talking to right when the game starts. So a restart
+            is
+            needed to enable or disable the mod for flawless execution.</p>
+
+        <p>Following Steps assume the mod is loaded and you see the Ghost Mode button in the main menu.</p>
+        <h4>Hosting a Lobby</h4>
+        <ol>
+            <li>Select the Ghost Mode button in the game's main menu.</li>
+            <li>Select "Choose a map" and choose one.</li>
+            <li>When in the waiting for players screen, open the ZHMModSDK interface and click "host" in the CrossGhost mod panel (you might need to toggle it at the top bar).</li>
+            <li>Send the lobby code to your friend and wait for him to join.</li>
+            <li>Click Ready once you see the 2nd player in the lobby.</li>
+            <li>Good Luck in your match!</li>
+        </ol>
+        <h4>Joining a Lobby</h4>
+        <ol>
+            <li>In the main menu, open the ZHMModSDK interface and show the panel of the CrossGhost mod. You might need to toggle it at the top bar.</li>
+            <li>Enter the code from your friend in the text field.</li>
+            <li>Click join and once in the lobby press ready.</li>
+            <li>Good Luck in your match!</li>
+        </ol>
+        <h3>Limitations</h3>
+        <ul>
+            <li>When all targets are killed but no player reached 5 points, the match will softlock and needs to be restarted manually.</li>
+            <li>Enabling or Disabling the CrossGhost mod requires a restart of the game.</li>
+        </ul>
+    </section>
+    <section id="features-section">
+        <h2 id="features">Features</h2>
+        <div>
+            <p>Hitman Versus Multiplayer</p>
+            <p>Play Hitman in a Race against your friends!</p>
+        </div>
+        <div>
+            <p>Cross-Play</p>
+            <p>Play with your friends on Epic Games or Steam. Cross-Play is fully functional.</p>
+        </div>
+        <div>
+            <p>All Maps Modified</p>
+            <p>Play your matches on any map (ok, except train) you want with hand-crafted targets.</p>
+        </div>
+    </section>
+    <section>
+        <h2 id="about">About</h2>
+        <p>Hey there, I'm Ramon, a passionate Hitman gamer and software developer!</p>
+        <p>I decided to develop this expansion of the already existing Hitman Ghost Mode mods as I wanted to play with my friends but they're on steam and I own the game on Epic Games. The existing mod did not allow for such a
+            thing to happen.</p>
+        <p>As soon as the already existing maps worked (Hawke's Bay, Miami and Santa Fortuna), I started working on making the remaining missions ghost mode compatible.</p>
+        <h3>Methodology & AI Disclosure</h3>
+        <p>As I'm not really familiar with C++ and the inner workings of the game, I decided to use AI to help me create the compatibility layer between steam and epic games and to modify the existing
+            <a href="https://gitlab.com/grappigegovert/localghost">LocalGhost</a> code by grappigegovert.</p>
+        <p>For the mission modification I created a tool, also using AI, to help me place the targets, crates, and spawns in-game. This was the easiest method for me as I could just move around and hand-place the Objects and NPCs
+            myself without the need to learn much more powerful modding tools.</p>
+        <p>All content that is in-game for the missions was <b>NOT</b> AI generated. I placed everything for the Ghost Mode missions myself using my tool. </p>
+        <p>If you find any odd placements or other issues, shoot me a mail or create a post on NexusMods and I'll try to fix the issues.</p>
+        <p>I disclosed my AI use openly as I think it's important to be transparent about my methods. Below are the repositories on my self-hosted git:</p>
+        <ul>
+            <li><a href="https://git.ramon.cc/ramon/crossghost-server">CrossGhost Server</a></li>
+            <li><a href="https://git.ramon.cc/ramon/crossghost-assets">CrossGhost Assets Mod</a></li>
+            <li><a href="https://git.ramon.cc/ramon/crossghost">CrossGhost Client</a></li>
+        </ul>
+        <h3>Credits</h3>
+        <p>This mod would not have been possible without the amazing prior work that went into the original mod.</p>
+        <p>Special thanks to:</p>
+        <ul>
+            <li>grappigegovert for LocalGhost</li>
+            <li>MrMike & Anthony Fuller for the Ghost Mode Mod</li>
+            <li>Adam for the Haven Island Ghost Mode mod to get inspiration from</li>
+            <li>OrfeasZ for the ZHMModSDK</li>
+            <li>atampy25 for the Simple Mod Framework</li>
+        </ul>
+        <h3>Donations</h3>
+        <p>I appreciate anyone willing to donate, but this is a fun project for me and hosted on a VPS that I need anyway. So at this point I will not be taking any donations. This may change if traffic on the CrossGhost server
+            is spiking.</p>
+    </section>
+</main>
+<footer>
+    <p>HITMAN © 2026 IO Interactive A/S. IO INTERACTIVE, IOI, and HITMAN are registered trademarks of IO Interactive A/S.</p>
+    <p>This page or mod is in no way, shape, or form associated with IO Interactive A/S.</p>
+    <p>For complaints, write me an E-Mail: <a href="mailto:crossghost@ramon.cc">crossghost@ramon.cc</a></p>
+</footer>
+</body>
+</html>

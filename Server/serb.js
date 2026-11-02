@@ -274,7 +274,9 @@ app.get('/files/onlineconfig.json', (req, res) => {
 });
 
 app.get('/', (req, res) => {
-    res.send('pog'); // simple test page
+    res.sendFile(path.join('static', 'index.html'), {
+        root: '.'
+    });
 });
 
 // --- Everything below requires authentication or points to /resources-{serverVersion}/* ---
