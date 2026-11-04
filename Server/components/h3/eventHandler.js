@@ -57,10 +57,23 @@ function encodePushMessage(timestamp, message) {
 let messageQueue = new Map();
 let eventQueue = new Map();
 
+// Queues were only trimmed when their user polled and never removed, so players
+// who stopped polling kept theirs forever. Cap each queue and expire old items.
+const MAX_QUEUED_PER_USER = 256;
+const QUEUE_ITEM_TTL_NS = 60n * 60n * 1000000000n; // the game polls every 10 s
+const MAX_SESSIONS = 5000;
+const MAX_SESSION_SET_SIZE = 10000;
+const MAX_SIMULTANEOUS_KILLS = 1000;
+
+function addCapped(set, value) {
+    if (set.size < MAX_SESSION_SET_SIZE || set.has(value)) set.add(value);
+}
+
 function enqueuePushMessage(userid, message) {
     let userQueue;
     let time = process.hrtime.bigint();
     if (userQueue = messageQueue.get(userid)) {
+        if (userQueue.length >= MAX_QUEUED_PER_USER) userQueue.shift();
         userQueue.push({
             time: time,
             message: encodePushMessage(time, message),
@@ -80,6 +93,7 @@ function enqueueEvent(userid, event) {
     event.CreatedAt = new Date().toISOString().slice(0, -1);
     event.Token = time.toString();
     if (userQueue = eventQueue.get(userid)) {
+        if (userQueue.length >= MAX_QUEUED_PER_USER) userQueue.shift();
         userQueue.push({
             time: time,
             event: event,
@@ -95,7 +109,12 @@ function enqueueEvent(userid, event) {
 
 let contractSessions = new Map();
 function newSession(sessionId, contractId, userId) {
-    timestamp = new Date();
+    const timestamp = new Date();
+    // Map order is creation order: evict the oldest sessions past the cap.
+    for (const oldest of contractSessions.keys()) {
+        if (contractSessions.size < MAX_SESSIONS) break;
+        contractSessions.delete(oldest);
+    }
 
     contractSessions.set(sessionId, {
         sessionStart: timestamp,
@@ -145,7 +164,8 @@ app.post('/SaveAndSynchronizeEvents4', express.json({ limit: '5Mb' }), (req, res
     // events: (server->client)
     if (userQueue = eventQueue.get(req.jwt.unique_name)) {
         userQueue = userQueue.filter(item => item.time > req.body.lastEventTicks);
-        eventQueue.set(req.jwt.unique_name, userQueue);
+        if (userQueue.length) eventQueue.set(req.jwt.unique_name, userQueue);
+        else eventQueue.delete(req.jwt.unique_name);
 
         newEvents = Array.from(userQueue, item => item.event);
     }
@@ -154,7 +174,8 @@ app.post('/SaveAndSynchronizeEvents4', express.json({ limit: '5Mb' }), (req, res
     let pushMessages = null;
     if (userQueue = messageQueue.get(req.jwt.unique_name)) {
         userQueue = userQueue.filter(item => item.time > req.body.lastPushDt);
-        messageQueue.set(req.jwt.unique_name, userQueue);
+        if (userQueue.length) messageQueue.set(req.jwt.unique_name, userQueue);
+        else messageQueue.delete(req.jwt.unique_name);
 
         pushMessages = Array.from(userQueue, item => item.message);
     }
@@ -200,7 +221,8 @@ function saveEvents(userId, events) {
         } else if (event.Name === 'Kill') {
             // Todo?: check for event.Value.KillContext === 1
             if (session.lastKill.timestamp === event.Timestamp) {
-                session.lastKill.repositoryIds.push(event.Value.RepositoryId);
+                if (session.lastKill.repositoryIds.length < MAX_SIMULTANEOUS_KILLS)
+                    session.lastKill.repositoryIds.push(event.Value.RepositoryId);
             } else {
                 session.lastKill = {
                     timestamp: event.Timestamp,
@@ -208,20 +230,20 @@ function saveEvents(userId, events) {
                 };
             }
             if (event.Value.IsTarget) {
-                session.targetKills.add(event.Value.RepositoryId);
+                addCapped(session.targetKills, event.Value.RepositoryId);
             } else {
-                session.npcKills.add(event.Value.RepositoryId);
+                addCapped(session.npcKills, event.Value.RepositoryId);
             }
         } else if (event.Name === 'CrowdNPC_Died') {
             session.crowdNpcKills += 1;
         } else if (event.Name === 'Pacify') {
-            session.pacifications.add(event.Value.RepositoryId);
+            addCapped(session.pacifications, event.Value.RepositoryId);
         } else if (event.Name === 'BodyHidden') {
-            session.bodiesHidden.add(event.Value.RepositoryId);
+            addCapped(session.bodiesHidden, event.Value.RepositoryId);
         } else if (event.Name === 'Disguise') {
-            session.disguisesUsed.add(event.Value);
+            addCapped(session.disguisesUsed, event.Value);
         } else if (event.Name === 'ContractStart') {
-            session.disguisesUsed.add(event.Value.Disguise);
+            addCapped(session.disguisesUsed, event.Value.Disguise);
         } else if (event.Name === 'Opponents') {
             session.ghost.Opponents = event.Value.ConnectedSessions;
         } else if (event.Name === 'MatchOver') {
@@ -231,13 +253,13 @@ function saveEvents(userId, events) {
             session.ghost.IsDraw = event.Value.IsDraw;
             session.timerEnd = event.Timestamp;
         } else if (event.Name === 'DisguiseBlown') {
-            session.disguisesRuined.add(event.Value);
+            addCapped(session.disguisesRuined, event.Value);
         } else if (event.Name === 'BrokenDisguiseCleared') {
             session.disguisesRuined.delete(event.Value);
         } else if (event.Name === 'Spotted') {
-            session.spottedBy.add(...event.Value);
+            addCapped(session.spottedBy, ...event.Value); // Set.add kept only the first
         } else if (event.Name === 'Witnesses') {
-            session.witnesses.add(...event.Value);
+            addCapped(session.witnesses, ...event.Value);
         } else if (event.Name === 'SecuritySystemRecorder') {
             if (event.Value.event === 'spotted' && session.recording !== 'ERASED') {
                 session.recording = 'SPOTTED';
@@ -253,14 +275,14 @@ function saveEvents(userId, events) {
                 session.timerEnd = event.Timestamp;
             }
         } else if (event.Name === 'ObjectiveCompleted') {
-            session.completedObjectives.add(event.Value.Id);
+            addCapped(session.completedObjectives, event.Value.Id);
         } else if (event.Name === 'AccidentBodyFound') {
             session.lastAccident = event.Timestamp;
         } else if (event.Name === 'MurderedBodySeen') {
             if (event.Timestamp !== session.lastAccident) {
-                session.bodiesFoundBy.add(event.Value.Witness);
+                addCapped(session.bodiesFoundBy, event.Value.Witness);
                 if (event.Timestamp === session.lastKill.timestamp) {
-                    session.killsNoticedBy.add(event.Value.Witness);
+                    addCapped(session.killsNoticedBy, event.Value.Witness);
                 }
             }
         }
@@ -275,6 +297,18 @@ function cleanupOldSessions() {
             contractSessions.delete(sessionId);
         }
     }
+    cleanupQueues();
+}
+
+function cleanupQueues(now = process.hrtime.bigint()) {
+    for (const queue of [messageQueue, eventQueue]) {
+        for (const [userId, userQueue] of queue) {
+            // eventQueue stores its times as strings
+            const kept = userQueue.filter(item => now - BigInt(item.time) < QUEUE_ITEM_TTL_NS);
+            if (kept.length) queue.set(userId, kept);
+            else queue.delete(userId);
+        }
+    }
 }
 
 module.exports = {
@@ -284,4 +318,7 @@ module.exports = {
     contractSessions,
     newSession,
     cleanupOldSessions,
+    cleanupQueues,
+    messageQueue,
+    eventQueue,
 };

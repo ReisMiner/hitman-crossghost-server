@@ -28,7 +28,8 @@ router.use('/profiles/page/', menuData.router);
 router.use('/resources-(\\d+-\\d+)/', menuSystem);
 
 function sessionCleanup() {
-    eventHandler.cleanupOldSessions();
+    eventHandler.cleanupOldSessions(); // also expires stale push/event queues
+    multiplayerHandler.cleanupMatches();
     ghostLobbyHandler.cleanup();
 }
 

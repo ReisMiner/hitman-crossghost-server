@@ -44,26 +44,38 @@ function getServerVerObj(gameVersion) {
 
 const UUIDRegex = /^[a-zA-Z0-9]{8}-[a-zA-Z0-9]{4}-[a-zA-Z0-9]{4}-[a-zA-Z0-9]{4}-[a-zA-Z0-9]{12}$/;
 
-function extractToken(req, res, next) {
+// Returns the decoded bearer token, null if there is none, or false if it is
+// malformed (not a JSON object with a UUID profile id).
+function readToken(req) {
     for (const headerName of [
         'Authorization',
         'X-GPS-Authorization'
     ]) {
         let auth = req.header(headerName) ? req.header(headerName).split(' ') : [];
         if (auth.length === 2 && auth[0].toLowerCase() === "bearer") {
-            req.jwt = jwt.decode(auth[1]); // I'm not going to verify the token
-            if (!UUIDRegex.test(req.jwt.unique_name)) {
-                console.warn('user sent jwt with non-uuid user id');
-                res.status(400).end();
-                return;
+            const token = jwt.decode(auth[1]); // I'm not going to verify the token
+            if (!token || typeof token !== 'object' || typeof token.unique_name !== 'string' ||
+                !UUIDRegex.test(token.unique_name)) {
+                return false;
             }
-            next && next();
-            return;
+            return token;
         }
     }
+    return null;
+}
 
-    console.warn(`invalid auth token for url ${req.originalUrl}`);
-    res.status(401).end();
+function extractToken(req, res, next) {
+    const token = readToken(req);
+    if (token) {
+        req.jwt = token;
+        next();
+    } else if (token === false) {
+        console.warn('user sent a malformed jwt or one with a non-uuid user id');
+        res.status(400).end();
+    } else {
+        console.warn(`invalid auth token for url ${req.originalUrl}`);
+        res.status(401).end();
+    }
 }
 
 const MaxPlayerLevel = 5000;
@@ -245,6 +257,7 @@ function publicHost() {
 module.exports = {
     DEFAULT_PUBLIC_ORIGIN,
     publicHost,
+    readToken,
     extractToken,
     getServerVerObj,
     MaxPlayerLevel,

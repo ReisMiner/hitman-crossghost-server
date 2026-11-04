@@ -2,13 +2,14 @@
 // Licensed under the zlib license. See LICENSE for more info
 
 const express = require('express');
+require('./components/asyncErrors.js'); // before any route: async rejections -> next(err)
 const http = require('http');
 const jwt = require('jsonwebtoken');
 const path = require('path');
 const uuid = require('uuid');
 const { writeFile, readFile } = require('atomically');
 
-const { extractToken, getServerVerObj, getGameVersionFromJWTPis, getGameVersionFromServerVersion, UUIDRegex, DEFAULT_PUBLIC_ORIGIN } = require('./components/utils.js');
+const { extractToken, readToken, getServerVerObj, getGameVersionFromJWTPis, getGameVersionFromServerVersion, UUIDRegex, DEFAULT_PUBLIC_ORIGIN } = require('./components/utils.js');
 const h1router = require('./components/h1router.js');
 const h2router = require('./components/h2router.js');
 const h3router = require('./components/h3router.js');
@@ -91,7 +92,12 @@ app.post('/oauth/token', async (req, res) => {
 
     if (req.body.grant_type === 'refresh_token') {
         // send back the token from the request (re-signed so the timestamps update)
-        extractToken(req); // init req.jwt
+        const token = readToken(req);
+        if (!token) {
+            res.status(token === false ? 400 : 401).end();
+            return;
+        }
+        req.jwt = token;
         // remove signOptions from existing jwt
         delete req.jwt.nbf; // notBefore
         delete req.jwt.exp; // expiresIn
@@ -120,6 +126,10 @@ app.post('/oauth/token', async (req, res) => {
     } else if (req.body.grant_type === 'external_epic') {
         if (!/^[\da-f]{32}$/.test(req.body.epic_userid)) {
             res.status(400).end(); // invalid epic user id
+            return;
+        }
+        if (typeof req.body.access_token !== 'string') {
+            res.status(400).end(); // missing epic access token
             return;
         }
         const epic_token = jwt.decode(req.body.access_token.replace(/^eg1~/, ''));
@@ -359,6 +369,22 @@ app.use(express.Router().use((req, res, next) => {
 app.all('*', (req, res) => {
     console.warn(`unhandled ${req.method} ${req.originalUrl}`);
     res.status(404).end()
+});
+
+// Failed requests end here instead of taking the process (and every room) down.
+app.use((error, req, res, next) => {
+    if (error && (error.type === 'entity.parse.failed' || error.type === 'entity.too.large')) {
+        if (!res.headersSent) res.status(error.type === 'entity.too.large' ? 413 : 400).end();
+        return;
+    }
+    console.error(`request failed: ${req.method} ${req.path}:`, error && error.stack || error);
+    if (res.headersSent) return next(error); // Express closes the half-sent response
+    res.status(500).end();
+});
+
+// Backstop for promise chains no handler returns (e.g. fire-and-forget writes).
+process.on('unhandledRejection', error => {
+    console.error('unhandled rejection:', error && error.stack || error);
 });
 
 setInterval(function () {
