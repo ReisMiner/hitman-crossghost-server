@@ -149,14 +149,6 @@ app.post('/SetMatchData', express.json(), (req, res) => {
     }
 });
 
-app.get('/DebugMatches', (req, res) => {
-    res.json([...activeMatches.entries()].map(([id, match]) => ({
-        matchId: id,
-        players: match.Players,
-        matchData: match.MatchData,
-    })));
-});
-
 app.post('/RegisterToPreset', express.json(), (req, res) => { // matchmaking
     console.log('RegisterToPreset request', JSON.stringify(req.body));
     // TODO: implement matchmaking
