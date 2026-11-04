@@ -4,10 +4,11 @@ The server behind [CrossGhost](https://git.ramon.cc/ramon/crossghost): HITMAN 3
 Ghost Mode crossplay between Steam and Epic Games players, on every Ghost Mode
 map. The public instance runs at **hitmanghost.ramon.cc**.
 
-Source: <https://git.ramon.cc/ramon/crossghost-server>. This fork is based on
-grappigegovert's previous work: [LocalGhost](https://gitlab.com/grappigegovert/localghost).
+This fork is based on grappigegovert's previous work: [LocalGhost](https://gitlab.com/grappigegovert/localghost).
 
 ## Players
+
+Fully detailed install instructions are here: https://hitmanghost.ramon.cc
 
 The setup process for players is super simple. You'll need the requirements down below:
 
@@ -16,7 +17,7 @@ The setup process for players is super simple. You'll need the requirements down
 - [CrossGhost](https://git.ramon.cc/ramon/crossghost/releases/latest) (`CrossGhost.dll`) downloaded
 - [CrossGhost Assets](https://git.ramon.cc/ramon/crossghost-assets/releases/latest) (`ramoncc.CrossGhostAssets`) deployed with SMF
 
-The DLL connects the game to hitmanghost.ramon.cc by itself; no patcher is needed.
+The DLL connects the game to hitmanghost.ramon.cc by itself. No patcher is needed.
 
 ## Server hosters
 
